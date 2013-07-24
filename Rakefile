@@ -20,8 +20,8 @@ Jeweler::Tasks.new do |gem|
   gem.version = BeanStalk::Worker::Version::STRING
   gem.homepage = "http://github.com/aia/beanstalk-worker"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Beanstalkd Worker base class}
+  gem.description = %Q{Beanstalkd Worker base class}
   gem.email = "artem@veremey.net"
   gem.authors = ["Artem Veremey"]
   # dependencies defined in Gemfile

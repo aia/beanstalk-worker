@@ -1,6 +1,6 @@
 = beanstalk-worker
 
-Beanstalk Worker base class.
+Beanstalkd Worker base class.
 
 == Contributing to beanstalk-worker
  
