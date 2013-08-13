@@ -5,9 +5,12 @@ class BeanStalk::Worker
   
   def initialize(config = {})
     @config = BeanStalk::Worker::Config
+    if File.exists? @config[:config_file]
+      @config.from_file @config[:config_file]
+    end
     @config.merge!(config || {})
-    @logger = BeanStalk::Worker::Log
 
+    @logger = BeanStalk::Worker::Log
     @logger.info("Logging started")
     
     @stats = {

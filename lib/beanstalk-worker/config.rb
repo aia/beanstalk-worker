@@ -1,15 +1,26 @@
 require 'mixlib/config'
+require 'active_support/core_ext/hash'
 require 'yajl'
 require 'yaml'
 
 # The configuration object for the gemindexer worker.
 class BeanStalk::Worker
-  class Config
+  module Config
     extend Mixlib::Config
 
     # Return the configuration itself upon inspection.
     def self.inspect
       configuration.inspect
+    end
+
+    class << self
+      # Support merging via coercion to symbols.
+      #
+      # @param [ Hash ] hash The configuration hash to symbolize and merge.
+      alias basic_merge! merge!
+      def merge!(hash)
+        basic_merge!(hash.symbolize_keys)
+      end
     end
 
     # Loads a given file and passes it to the appropriate parser.
@@ -18,9 +29,8 @@ class BeanStalk::Worker
     #
     # @param [ String ] filename The filename to read.
     # @param [ String ] parser The parser to use.
-    # @param [ String ] environment The environment to read config for.
-    def self.from_file(filename, parser="yaml", environment="development")
-      send("from_file_#{parser}".to_sym, filename, environment)
+    def self.from_file(filename, parser="yaml")
+      send("from_file_#{parser}".to_sym, filename, self[:environment])
     end
 
     # Loads a given ruby file and runs instance_eval against it
@@ -72,7 +82,7 @@ class BeanStalk::Worker
     #
     # @return [ String ] The beanstalk uri.
     def self.beanstalk_uri
-      [self['beanstalk']['server'], self['beanstalk']['port']].join(":")
+      [self[:beanstalk][:server], self[:beanstalk][:port]].join(":")
     end
 
     # When you are using ActiveSupport, they monkey-patch 'daemonize' into
@@ -92,6 +102,12 @@ class BeanStalk::Worker
     log_level :warn
     log_location STDOUT
     log_formatter :json
+
+    # Environment
+    environment :development
+
+    # Config file
+    config_file "#{Dir.pwd}/beanstalk-worker.conf"
 
     # Beanstalk config
     beanstalk({
