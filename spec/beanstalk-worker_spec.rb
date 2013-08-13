@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__))
+$:.unshift File.dirname(__FILE__)
 
 require 'spec_helper'
 require 'beanstalk-client-rspec'
@@ -17,9 +17,6 @@ describe "BeanStalk" do
           :tube => 'testqueue'
         }
       }
-      
-      @original_stdout = $stdout
-      $stdout = File.new('/dev/null', 'w')
       
       stub_const("Beanstalk::Pool", Beanstalk::MockPool)
     end

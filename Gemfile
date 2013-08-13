@@ -4,10 +4,11 @@ source "http://rubygems.org"
 #   gem "activesupport", ">= 2.3.5"
 
 gem 'beanstalk-client'
-gem "mixlib-log", "~> 1.6.0"
-gem "mixlib-config", "~> 1.1.2"
-gem "mixlib-log-json", "~> 0.0.1"
-gem "yajl-ruby", "~> 1.1.0"
+gem 'mixlib-log', "~> 1.6.0"
+gem 'mixlib-config', "~> 1.1.2"
+gem 'mixlib-log-json', "~> 0.0.1"
+gem 'yajl-ruby', "~> 1.1.0"
+gem 'activesupport', "~> 4.0.0"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
