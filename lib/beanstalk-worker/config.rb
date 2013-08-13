@@ -1,15 +1,26 @@
 require 'mixlib/config'
+require 'active_support/core_ext/hash'
 require 'yajl'
 require 'yaml'
 
 # The configuration object for the gemindexer worker.
 class BeanStalk::Worker
-  class Config
+  module Config
     extend Mixlib::Config
 
     # Return the configuration itself upon inspection.
     def self.inspect
       configuration.inspect
+    end
+
+    class << self
+      # Support merging via coercion to symbols.
+      #
+      # @param [ Hash ] hash The configuration hash to symbolize and merge.
+      alias basic_merge! merge!
+      def merge!(hash)
+        basic_merge!(hash.symbolize_keys)
+      end
     end
 
     # Loads a given file and passes it to the appropriate parser.
@@ -72,7 +83,7 @@ class BeanStalk::Worker
     #
     # @return [ String ] The beanstalk uri.
     def self.beanstalk_uri
-      [self['beanstalk']['server'], self['beanstalk']['port']].join(":")
+      [self[:beanstalk][:server], self[:beanstalk][:port]].join(":")
     end
 
     # When you are using ActiveSupport, they monkey-patch 'daemonize' into
