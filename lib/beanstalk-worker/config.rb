@@ -29,9 +29,8 @@ class BeanStalk::Worker
     #
     # @param [ String ] filename The filename to read.
     # @param [ String ] parser The parser to use.
-    # @param [ String ] environment The environment to read config for.
-    def self.from_file(filename, parser="yaml", environment="development")
-      send("from_file_#{parser}".to_sym, filename, environment)
+    def self.from_file(filename, parser="yaml")
+      send("from_file_#{parser}".to_sym, filename, self[:environment])
     end
 
     # Loads a given ruby file and runs instance_eval against it
@@ -103,6 +102,12 @@ class BeanStalk::Worker
     log_level :warn
     log_location STDOUT
     log_formatter :json
+
+    # Environment
+    environment :development
+
+    # Config file
+    config_file "#{Dir.pwd}/beanstalk-worker.conf"
 
     # Beanstalk config
     beanstalk({
