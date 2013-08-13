@@ -18,9 +18,6 @@ describe "BeanStalk" do
         }
       }
       
-      @original_stdout = $stdout
-      $stdout = File.new('/dev/null', 'w')
-      
       stub_const("Beanstalk::Pool", Beanstalk::MockPool)
     end
     
