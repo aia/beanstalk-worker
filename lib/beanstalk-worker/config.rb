@@ -14,6 +14,8 @@ class BeanStalk::Worker
     end
 
     class << self
+      configuration = HashWithIndifferentAccess.new
+
       # Support merging via coercion to symbols.
       #
       # @param [ Hash ] hash The configuration hash to symbolize and merge.
@@ -52,7 +54,8 @@ class BeanStalk::Worker
     # @param [ String ] filename The file to read.
     # @param [ String ] environment The environment to use.
     def self.from_file_yaml(filename, environment)
-      configuration.merge!(YAML.load_file(filename)[environment])
+      configuration.merge!(
+        YAML.load_file(filename).deep_symbolize_keys[environment])
     end
 
     # Loads a given json file and merges the current context
