@@ -22,8 +22,8 @@ Jeweler::Tasks.new do |gem|
   gem.license = "MIT"
   gem.summary = %Q{Beanstalkd Worker base class}
   gem.description = %Q{Beanstalkd Worker base class}
-  gem.email = "artem@veremey.net"
-  gem.authors = ["Artem Veremey"]
+  gem.email = ["artem@veremey.net", "joshtoft@gmail.com"]
+  gem.authors = ["Artem Veremey", "Josh Toft"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
