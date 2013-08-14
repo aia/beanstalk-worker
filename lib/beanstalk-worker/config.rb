@@ -19,7 +19,7 @@ class BeanStalk::Worker
       # @param [ Hash ] hash The configuration hash to symbolize and merge.
       alias basic_merge! merge!
       def merge!(hash)
-        basic_merge!(hash.symbolize_keys)
+        basic_merge!(hash.deep_symbolize_keys)
       end
     end
 
