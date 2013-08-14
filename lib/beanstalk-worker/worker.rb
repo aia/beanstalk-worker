@@ -28,6 +28,8 @@ class BeanStalk::Worker
     @beanstalk.watch(@config[:beanstalk][:tube])
     @beanstalk.use(@config[:beanstalk][:tube])
     @beanstalk.ignore('default')
+  rescue
+    @logger.error "Could not connect to beanstalk."
   end
   
   def start(received = -1)
