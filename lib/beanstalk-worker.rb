@@ -2,7 +2,7 @@ $:.unshift File.dirname(__FILE__)
 
 module BeanStalk
   class Worker
-    VERSION = '0.0.6'
+    VERSION = '0.0.7'
   end
 end
 
