@@ -6,7 +6,7 @@ source "http://rubygems.org"
 gem 'beanstalk-client'
 gem 'mixlib-log', "~> 1.6.0"
 gem 'mixlib-config', "~> 1.1.2"
-gem 'mixlib-log-json', "~> 0.0.1"
+gem 'mixlib-log-json', "~> 0.0.2"
 gem 'yajl-ruby', "~> 1.1.0"
 gem 'activesupport', "~> 4.0.0"
 
