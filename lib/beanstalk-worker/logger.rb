@@ -32,8 +32,6 @@ module BeanStalk::Worker::Log
     end
   end
 
-  init
-
   # Monkeypatch Formatter to allow local show_time updates.
   class Formatter
     # Allow enabling and disabling of time with a singleton.

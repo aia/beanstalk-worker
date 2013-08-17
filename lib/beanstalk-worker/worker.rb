@@ -11,6 +11,7 @@ class BeanStalk::Worker
     @config.merge!(config || {})
 
     @logger = BeanStalk::Worker::Log
+    @logger.reset!
     @logger.info("Logging started")
     
     @stats = {
