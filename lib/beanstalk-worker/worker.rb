@@ -1,7 +1,7 @@
 require 'beanstalk-client'
 
 class BeanStalk::Worker
-  attr_accessor :config, :log, :beanstalk, :stats
+  attr_accessor :config, :log, :connection, :stats
   
   def initialize(config = {})
     @config = BeanStalk::Worker::Config
@@ -21,22 +21,40 @@ class BeanStalk::Worker
     initialize_beanstalk
   end
   
-  def initialize_beanstalk
-    @beanstalk = Beanstalk::Pool.new([
+  def beanstalk
+    @connection ||= Beanstalk::Pool.new([
       BeanStalk::Worker::Config.beanstalk_uri
     ])
-    
-    @beanstalk.watch(@config[:beanstalk][:tube])
-    @beanstalk.use(@config[:beanstalk][:tube])
-    @beanstalk.ignore('default')
+    @logger.info("Connected to beanstalk")
   rescue
-    @logger.error "Could not connect to beanstalk."
+    @logger.error("Could not connect to beanstalk.")
+    reconnect
+  end
+  
+  def initialize_beanstalk
+    # @beanstalk = Beanstalk::Pool.new([
+    #   BeanStalk::Worker::Config.beanstalk_uri
+    # ])
+    
+    beanstalk.watch(@config[:beanstalk][:tube])
+    beanstalk.use(@config[:beanstalk][:tube])
+    beanstalk.ignore('default')
+  rescue
+    @logger.error("Could not connect to beanstalk.")
+    reconnect
+  end
+  
+  def reconnect
+    @logger.error("Sleeping 30 seconds")
+    sleep(30)
+    @logger.error("Attempting to reconnect")
+    start
   end
   
   def start(received = -1)
     while (received == -1) || (@stats['received'] < received)
       begin
-        job = @beanstalk.reserve
+        job = beanstalk.reserve
         
         @logger.debug("job #{job.inspect}")
         @logger.debug("job #{job.body.inspect}")
@@ -44,6 +62,9 @@ class BeanStalk::Worker
         @stats['received'] += 1
         
         job.delete if work(job)
+      rescue Beanstalk::NotConnected => e
+        @logger.error("Beanstalk disconnected")
+        reconnect
       rescue Exception => e
         @logger.error("Caught exception #{e.to_s}")
         exit
