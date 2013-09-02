@@ -22,20 +22,19 @@ class BeanStalk::Worker
   end
   
   def beanstalk
-    @connection ||= Beanstalk::Pool.new([
-      BeanStalk::Worker::Config.beanstalk_uri
-    ])
-    @logger.info("Connected to beanstalk")
+    if @connection.nil?
+      @connection = Beanstalk::Pool.new([
+        BeanStalk::Worker::Config.beanstalk_uri
+      ])
+      @logger.info("Connected to beanstalk")
+    end
+    @connection
   rescue
     @logger.error("Could not connect to beanstalk.")
     reconnect
   end
   
-  def initialize_beanstalk
-    # @beanstalk = Beanstalk::Pool.new([
-    #   BeanStalk::Worker::Config.beanstalk_uri
-    # ])
-    
+  def initialize_beanstalk    
     beanstalk.watch(@config[:beanstalk][:tube])
     beanstalk.use(@config[:beanstalk][:tube])
     beanstalk.ignore('default')
@@ -45,6 +44,7 @@ class BeanStalk::Worker
   end
   
   def reconnect
+    @connection = nil
     @logger.error("Sleeping 30 seconds")
     sleep(30)
     @logger.error("Attempting to reconnect")
