@@ -6,7 +6,11 @@ class BeanStalk::Worker
   def initialize(config = {})
     @config = BeanStalk::Worker::Config
     if File.exists? @config[:config_file]
-      @config.from_file @config[:config_file]
+      if config.environment
+        @config.from_file @config[:config_file], config.environment
+      else
+        @config.from_file @config[:config_file]
+      end
     end
     @config.merge!(config || {})
 
