@@ -7,7 +7,8 @@ class BeanStalk::Worker
     @config = BeanStalk::Worker::Config
     if File.exists? @config[:config_file]
       if config[:environment]
-        @config.from_file @config[:config_file], config[:environment]
+        @config.from_file @config[:config_file],
+          :environment => config[:environment]
       else
         @config.from_file @config[:config_file]
       end

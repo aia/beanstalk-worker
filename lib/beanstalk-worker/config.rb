@@ -30,9 +30,11 @@ class BeanStalk::Worker
     # @raise [ IOError ] Any IO Exceptions that occur.
     #
     # @param [ String ] filename The filename to read.
-    # @param [ String ] parser The parser to use.
-    def self.from_file(filename, parser="yaml")
-      send("from_file_#{parser}".to_sym, filename, self[:environment])
+    # @param [ Hash ] opts The options to send
+    def self.from_file(filename, opts={})
+      opts = { :parser => "yaml" }.merge(opts)
+      send("from_file_#{opts[:parser]}".to_sym, filename,
+        (opts[:environment] || self[:environment]))
     end
 
     # Loads a given ruby file and runs instance_eval against it
